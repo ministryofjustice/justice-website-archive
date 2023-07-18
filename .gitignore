@@ -1,0 +1,13 @@
+# Environment
+.idea
+.DS*
+._DS*
+
+.env
+
+# Spider directory is ephemoral
+snapshots
+
+node_modules
+dist
+mix-manifest.json

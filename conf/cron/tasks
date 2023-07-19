@@ -1,0 +1,2 @@
+*/10 * * * * /usr/bin/s3sync >> /archiver/cron.log
+0 3 * * * curl -X POST http://localhost:2000/processing -s > /dev/null

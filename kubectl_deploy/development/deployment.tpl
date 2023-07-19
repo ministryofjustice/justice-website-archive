@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: justice-website-archive-dev
+  name: justice-gov-uk-archiver-dev
 spec:
   replicas: 2
   revisionHistoryLimit: 5
@@ -12,14 +12,14 @@ spec:
       maxSurge: 100%
   selector:
     matchLabels:
-      app: justice-website-archive-dev
+      app: justice-gov-uk-archiver-dev
   template:
     metadata:
       labels:
-        app: justice-website-archive-dev
+        app: justice-gov-uk-archiver-dev
     spec:
       containers:
-      - name: justice-website-archive
+      - name: justice-gov-uk-archiver
         image: ${ECR_URL}:${IMAGE_TAG}
         ports:
         - containerPort: 8080

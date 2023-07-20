@@ -14,7 +14,5 @@ docker compose up -d
 echo -e "${DOTS} ${DOTS} Launching your default browser... ${DOTS}\n"
 sleep 2
 
-if command -v python &> /dev/null
-then
-  python -m webbrowser http://spider.intranet.docker
-fi
+# remember; if command -v fails processing stops.
+command -v python &> /dev/null && python -m webbrowser http://spider.intranet.docker

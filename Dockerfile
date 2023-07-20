@@ -36,29 +36,36 @@ ARG user=archiver
 ARG uid=1001
 RUN addgroup --gid ${uid} ${user} && \
     adduser --disabled-login --disabled-password --ingroup ${user} --home /${user} --gecos "${user} user" --shell /bin/bash --uid ${uid} ${user} && \
-    usermod -a -G ${user} nginx && \
+    usermod -a -G nginx ${user} && \
+    usermod -a -G crontab ${user} && \
     mkdir /usr/lib/cron && \
     echo "${user}" > /usr/lib/cron/cron.allow && \
     echo "${user}" > /etc/cron.allow
 
 COPY src/ /usr/share/nginx/html
-COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
-COPY conf/entrypoint/ /docker-entrypoint.d
-COPY conf/s3-sync.sh /usr/bin/s3sync
+COPY --chown=${user}:${user} conf/cron/tasks /etc/cron.d/archiver_schedule
+COPY --chown=${user}:${user} conf/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --chown=${user}:${user} conf/entrypoint/ /docker-entrypoint.d
+COPY --chown=${user}:${user} conf/s3-sync.sh /usr/bin/s3sync
 
 ## -> make init scripts executable
-RUN chmod -R +x /docker-entrypoint.d/ && \
+RUN chown -R ${user}:${user} /usr/share/nginx/html && \
+    chmod -R +x /docker-entrypoint.d/ && \
     chmod +x /usr/bin/s3sync
 
 ## -> set up user to access the cron
-RUN echo "*/10 * * * * /usr/bin/s3sync >> /archiver/cron.log" >> /etc/cron.d/s3-sync-cron && \
-    echo "0 3 * * * curl -X POST http://localhost:2000/processing -s > /dev/null" >> /etc/cron.d/create-snapshot && \
-    crontab -u ${user} /etc/cron.d/s3-sync-cron && \
-    crontab -u ${user} /etc/cron.d/create-snapshot && \
-    chmod u+s /usr/sbin/cron
-
-RUN touch /${user}/cron.log && \
-    chmod 666 /${user}/cron.log
+RUN chgrp crontab /usr/bin/crontab && \
+    chgrp crontab /usr/sbin/cron && \
+    chgrp crontab /var/spool/cron && \
+    chmod 4774 -R /var/spool/cron && \
+    chmod gu+rw /var/run && \
+    chmod gu+s /usr/sbin/cron && \
+    chmod -R g+s /var/spool/cron && \
+    crontab -u ${user} /etc/cron.d/archiver_schedule && \
+    # logging
+    touch /${user}/cron.log && \
+    chmod 666 /${user}/cron.log && \
+    chown ${user}:${user} /${user}/cron.log
 
 RUN apt remove -y unzip
 

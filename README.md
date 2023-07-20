@@ -34,14 +34,14 @@ Access points:
 
 ## Creating a snapshot
 
-Access is granted if you are in possession of the basic-auth credentials.
+Access is granted if you are in possession of our basic-auth credentials; these are different from the credentials mentioned above.
 
-Access point: [via Cloud Platform (dev)](https://dev-intranet-archive.apps.live.cloud-platform.service.justice.gov.uk/)
+Access point: [via Cloud Platform (dev)](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
 
 ## Local development
 
 > It's important to note that creating a snapshot of the intranet from a local machine proved to present resource
-> related issues, such as VPN timeouts and rate limiting. 
+> related issues, such as rate limiting. 
 
 Requires
 

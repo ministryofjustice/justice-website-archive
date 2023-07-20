@@ -23,10 +23,28 @@ app.use(cors({
 app.post('/processing', async function (request, response, next) {
     // offload the request to a function that checks if httrack
     // has a running process, launch the spider if not
-    if (!await httrack_is_running()) {
+    let httrack_pid = await httrack_is_running();
+    if (!httrack_pid) {
         response.status(200).sendFile(path.join('/usr/share/nginx/html/working.html'));
         await spider(request.body);
-    } else {
+    }
+    else {
+        let etime = execSync('ps -p ' + httrack_pid.toString().trim() + ' -o etime=').toString().trim().split(":"),
+            segments = ['second', 'minute', 'hour', 'day'],
+            elapsed_time = '',
+            segment_count = etime.length;
+
+        etime.reverse();
+
+        for (let ii = 0; ii < segment_count; ii++) {
+            let divider = ((ii + 1) === segment_count ? ' and ' : ((ii + 2) === segment_count) ? ' ' : ', ');
+            // 1 day, 3 hours, 8 minutes and 43 seconds
+            if (etime[ii] !== '00') {
+                elapsed_time = parseInt(etime[ii]) + ' ' + segments[ii] + (etime[ii] !== '01' ? 's' : '') + divider + elapsed_time
+            }
+        }
+
+        execSync( "sed -i -e 's/\\(<elapsed_time>\\).*\\(<\\/elapsed_time>\\)/<elapsed_time>" + elapsed_time + "<\\/elapsed_time>/g' /usr/share/nginx/html/rejected.html");
         response.status(200).sendFile(path.join('/usr/share/nginx/html/rejected.html'));
     }
 });

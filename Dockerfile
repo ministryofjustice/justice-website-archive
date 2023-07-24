@@ -37,10 +37,7 @@ ARG uid=1001
 RUN addgroup --gid ${uid} ${user} && \
     adduser --disabled-login --disabled-password --ingroup ${user} --home /${user} --gecos "${user} user" --shell /bin/bash --uid ${uid} ${user} && \
     usermod -a -G nginx ${user} && \
-    usermod -a -G crontab ${user} && \
-    mkdir /usr/lib/cron && \
-    echo "${user}" > /usr/lib/cron/cron.allow && \
-    echo "${user}" > /etc/cron.allow
+    usermod -a -G crontab ${user}
 
 COPY src/ /usr/share/nginx/html
 COPY --chown=${user}:${user} conf/cron/tasks /etc/cron.d/archiver_schedule
@@ -53,8 +50,11 @@ RUN chown -R ${user}:${user} /usr/share/nginx/html && \
     chmod -R +x /docker-entrypoint.d/ && \
     chmod +x /usr/bin/s3sync
 
-## -> set up user to access the cron
-RUN chgrp crontab /usr/bin/crontab && \
+## -> set up the cron
+RUN mkdir /usr/lib/cron && \
+    echo "${user}\n" >> /usr/lib/cron/cron.allow && \
+    echo "${user}\n" >> /etc/cron.allow && \
+    chgrp crontab /usr/bin/crontab && \
     chgrp crontab /usr/sbin/cron && \
     chgrp crontab /var/spool/cron && \
     chgrp crontab /run && \
@@ -62,6 +62,7 @@ RUN chgrp crontab /usr/bin/crontab && \
     chmod gu+rw /run && \
     chmod gu+s /usr/sbin/cron && \
     chmod -R g+s /var/spool/cron && \
+    chmod g+w /usr/bin/crontab && \
     crontab -u ${user} /etc/cron.d/archiver_schedule && \
     # logging
     touch /${user}/cron.log && \

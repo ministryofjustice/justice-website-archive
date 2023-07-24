@@ -23,7 +23,7 @@ app.use(cors({
 app.post('/processing', async function (request, response, next) {
     // offload the request to a function that checks if httrack
     // has a running process, launch the spider if not
-    let httrack_pid = await httrack_is_running();
+    let httrack_pid = await process_is_running('httrack');
     if (!httrack_pid) {
         response.status(200).sendFile(path.join('/usr/share/nginx/html/working.html'));
         await spider(request.body);
@@ -58,7 +58,7 @@ async function spider(body) {
     await new Promise(resolve => setTimeout(resolve, 1));
     const {spawn} = require('child_process');
     const mirror = {
-        url: new URL('https://www.justice.gov.uk/')
+        url: new URL('https://www.datainc.uk/')
     }
     let directory = '/archiver/snapshots/' + mirror.url.host;
 
@@ -139,21 +139,33 @@ async function spider(body) {
 
 function sync_all_data() {
     // launch s3sync
-    console.log("The MoJ Spider is closing the session with a data-sync operation.\n");
+    console.log("\nThe MoJ Spider is closing the session with a data-sync operation.");
     const listener = spawn('s3sync');
+    listener.stdout.on('data', data => null);
+    listener.stderr.on('data', data => null);
+    listener.on('error', (error) => console.log(`s3sync error: ${error.message}`));
     listener.on('close', (code) => {
         console.log("Synchronisation complete.\n");
     });
+
+    // check if process still running after 60 seconds
+    setTimeout(async () => {
+        let s3sync_pid = await process_is_running('s3sync');
+        if (s3sync_pid) {
+            exec('kill -9 ' + s3sync_pid.toString().trim());
+        }
+    }, 60000)
 }
+
 /**
  * Resolve the PID of a running httrack process.
  * Catch the error if PID cannot be found.
  *
  * @returns {Promise<boolean|*>}
  */
-async function httrack_is_running() {
+async function process_is_running(process) {
     try {
-        return execSync('pgrep httrack');
+        return execSync('pgrep ' + process);
     } catch (error) {
         return false;
     }

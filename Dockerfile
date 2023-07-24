@@ -57,6 +57,7 @@ RUN chown -R ${user}:${user} /usr/share/nginx/html && \
 RUN chgrp crontab /usr/bin/crontab && \
     chgrp crontab /usr/sbin/cron && \
     chgrp crontab /var/spool/cron && \
+    chgrp crontab /var/run && \
     chmod 4774 -R /var/spool/cron && \
     chmod gu+rw /var/run && \
     chmod gu+s /usr/sbin/cron && \

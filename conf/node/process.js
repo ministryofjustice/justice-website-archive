@@ -148,13 +148,13 @@ function sync_all_data() {
         console.log("Synchronisation complete.\n");
     });
 
-    // check if process still running after 60 seconds
+    // check if process still running after 90 seconds
     setTimeout(async () => {
         let s3sync_pid = await process_is_running('s3sync');
         if (s3sync_pid) {
             exec('kill -9 ' + s3sync_pid.toString().trim());
         }
-    }, 60000)
+    }, 90000)
 }
 
 /**

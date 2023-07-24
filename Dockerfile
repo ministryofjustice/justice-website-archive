@@ -62,7 +62,7 @@ RUN mkdir /usr/lib/cron && \
     chmod gu+rw /run && \
     chmod gu+s /usr/sbin/cron && \
     chmod -R g+s /var/spool/cron && \
-    chmod g+w /usr/bin/crontab && \
+    chmod g+s /usr/bin/crontab && \
     crontab -u ${user} /etc/cron.d/archiver_schedule && \
     # logging
     touch /${user}/cron.log && \

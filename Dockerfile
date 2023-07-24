@@ -57,9 +57,9 @@ RUN chown -R ${user}:${user} /usr/share/nginx/html && \
 RUN chgrp crontab /usr/bin/crontab && \
     chgrp crontab /usr/sbin/cron && \
     chgrp crontab /var/spool/cron && \
-    chgrp crontab /var/run && \
+    chgrp crontab /run && \
     chmod 4774 -R /var/spool/cron && \
-    chmod gu+rw /var/run && \
+    chmod gu+rw /run && \
     chmod gu+s /usr/sbin/cron && \
     chmod -R g+s /var/spool/cron && \
     crontab -u ${user} /etc/cron.d/archiver_schedule && \

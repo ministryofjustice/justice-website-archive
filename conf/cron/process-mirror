@@ -1,0 +1,6 @@
+##=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+## At 3 am, hit the local spider endpoint
+## ... kick-starts a mirror process
+##=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+0 3 * * * curl -X POST http://localhost:2000/processing -s > /dev/null

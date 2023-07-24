@@ -1,0 +1,6 @@
+##=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+## Start our S3 sync process
+## Every 6th minute
+##=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+*/6 * * * * /usr/bin/s3sync >> /archiver/s3sync.log

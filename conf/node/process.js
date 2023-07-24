@@ -8,7 +8,7 @@ const path = require('path');
 const app = express();
 const port = 2000;
 const cors = require('cors');
-const {exec, execSync} = require('child_process');
+const {exec, execSync, spawn} = require('child_process');
 
 app.use(express.urlencoded({extended: true}));
 
@@ -86,7 +86,7 @@ async function spider(body) {
      * @type {string[]}
      */
     rules = [
-        '+*.png', '+*.gif', '+*.jpg', '+*.jpeg', '+*.css', '+*.js', '-ad.doubleclick.net/*'
+        '+*.png', '+*.gif', '+*.jpg', '+*.jpeg', '+*.css', '+*.js', '-ad.doubleclick.net/*', '-coveritlive.com/*'
     ];
 
     /**
@@ -107,16 +107,44 @@ async function spider(body) {
     // combine: push settings into options
     options = options.concat(settings);
     // verify options array
-    console.log('Launching Intranet Spider with the following options: ', options);
+    console.log("\n");
+    console.log('Launching the MoJ Spider with the following options: ', options);
+    console.log("\nStand by... \n");
+
+    console.log("Starting data-sync process...");
+
+    // empty s3sync.log
+    execSync('echo "" > /archiver/s3sync.log');
+    // start the sync process
+    exec('s3sync-cron');
+
+    console.log("Done.");
 
     // launch HTTrack with options
     const listener = spawn('httrack', options);
-    listener.stdout.on('data', data => console.log(`stdout: ${data}`));
-    listener.stderr.on('data', data => console.log(`stderr: ${data}`));
-    listener.on('error', (error) => console.log(`error: ${error.message}`));
-    listener.on('close', code => console.log(`child process exited with code ${code}`));
+    listener.stdout.on('data', data => console.log(`httrack: ${data}`));
+    listener.stderr.on('data', data => console.log(`httrack stderr: ${data}`));
+    listener.on('error', (error) => console.log(`httrack error: ${error.message}`));
+    listener.on('close', (code) => {
+        console.log("The MoJ Spider has completed the mirror process with exit code ${code}.\n");
+
+        // stop the sync process
+        execSync('kill -9 `cat /archiver/supercronic_sync.pid`');
+        execSync('rm /archiver/supercronic_sync.pid');
+
+        // sync, one last time
+        sync_all_data();
+    });
 }
 
+function sync_all_data() {
+    // launch s3sync
+    console.log("The MoJ Spider is closing the session with a data-sync operation.\n");
+    const listener = spawn('s3sync');
+    listener.on('close', (code) => {
+        console.log("Synchronisation complete.\n");
+    });
+}
 /**
  * Resolve the PID of a running httrack process.
  * Catch the error if PID cannot be found.

@@ -58,7 +58,7 @@ async function spider(body) {
     await new Promise(resolve => setTimeout(resolve, 1));
     const {spawn} = require('child_process');
     const mirror = {
-        url: new URL('https://www.datainc.uk/')
+        url: new URL('https://www.justice.gov.uk/')
     }
     let directory = '/archiver/snapshots/' + mirror.url.host;
 

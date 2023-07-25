@@ -18,7 +18,7 @@
 </div>
 
 ### Table of contents
-<details open>
+<details open="open">
 <summary><b>(click to expand or hide)</b></summary>
 
 1. [Workflow](#workflow)
@@ -61,20 +61,21 @@ Access is granted to the snapshot if, you:
 
 Access points:
 
-1) [Cloud Platform](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
+1) [TBA](#)
 
 <br><br> [back to top](#readme-top)
 <a id="creating-a-snaphot"></a>
 ## Creating a snapshot
 
-Access is granted if you are in possession of our basic-auth credentials; these are different from the credentials mentioned above.
+Access is granted if you are in possession of our basic-auth credentials; these are different from the credentials 
+mentioned above.
 
-Access point: [via Cloud Platform (dev)](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
+Access point: [Cloud Platform](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
 
 <a id="local-development"></a>
 ## Local development
 
-> It's important to note that creating a snapshot of the intranet from a local machine proved to present resource
+> It's important to note that creating a snapshot from a local machine proved to present resource
 > related issues, such as rate limiting. 
 
 Requires
@@ -95,15 +96,16 @@ Start docker compose:
 ```
 make run
 ```
+
 There is a script designed to help you install the [Dory Proxy](https://github.com/FreedomBen/dory), if you'd like to.
 
 If you chose to install Dory, you can access the application here:
 
-[spider.justice.docker](http://spider.justice.docker/)
+[http://spider.justice.docker/](http://spider.justice.docker/)
 
 Otherwise, access the application here:
 
-[localhost:8080](http://localhost:8080/)
+[http://localhost:8080/](http://localhost:8080/)
 
 <br><br> [back to top](#readme-top)
 <a id="understanding-application-logic"></a>

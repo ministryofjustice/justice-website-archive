@@ -1,5 +1,7 @@
 <div align="center">
 
+<a id="readme-top"></a>
+
 <br>
 
 <img alt="MoJ logo" src="https://moj-logos.s3.eu-west-2.amazonaws.com/moj-uk-logo.png" width="200">
@@ -12,9 +14,32 @@
 [![License](https://img.shields.io/github/license/ministryofjustice/justice-website-archive?style=for-the-badge)](https://github.com/ministryofjustice/justice-website-archive/blob/main/LICENSE)
 
 [![CI and CD](https://github.com/ministryofjustice/justice-website-archive/actions/workflows/cd.yml/badge.svg)](https://github.com/ministryofjustice/justice-website-archive/actions/workflows/cd.yml)
+
 </div>
 
+### Table of contents
+<details open>
+<summary><b>(click to expand or hide)</b></summary>
 
+1. [Workflow](#workflow)
+2. [Viewing the latest snapshot](#viewing-the-latest-snapshot)
+3. [Creating a snapshot](#creating-a-snapshot)
+4. [Local development](#local-development)
+   1. [Installation](#installation)
+   2. [Understanding application logic](#understanding-application-logic)
+5. [HTTrack](#httrack)
+   1. [Debugging](#debugging)
+   2. [Testing and making modifications](#testing-and-making-modifications)
+6. [Kubernetes](#kubernetes)
+   1. [Commands](#commands-kubernetes)
+7. [Makefile](#connect-and-configure-1)
+   1. [Commands](#commands-makefile)
+
+</details>
+
+---
+
+<a id="workflow"></a>
 ## Workflow
 
 Archive utility to capture working snapshots of justice.gov.uk. We use the following technologies to achieve this:
@@ -25,6 +50,7 @@ Archive utility to capture working snapshots of justice.gov.uk. We use the follo
 4. HTTrack Cli
 5. NodeJS Server
 
+<a id="viewing-the-latest-snapshot"></a>
 ## Viewing the latest snapshot
 
 Access is granted to the snapshot if, you:
@@ -35,14 +61,17 @@ Access is granted to the snapshot if, you:
 
 Access points:
 
-1) TBA
+1) [Cloud Platform](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
 
+<br><br> [back to top](#readme-top)
+<a id="creating-a-snaphot"></a>
 ## Creating a snapshot
 
 Access is granted if you are in possession of our basic-auth credentials; these are different from the credentials mentioned above.
 
 Access point: [via Cloud Platform (dev)](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
 
+<a id="local-development"></a>
 ## Local development
 
 > It's important to note that creating a snapshot of the intranet from a local machine proved to present resource
@@ -52,6 +81,7 @@ Requires
 
 - Docker
 
+<a id="installation"></a>
 ### Installation
 
 Clone to your machine:
@@ -75,32 +105,57 @@ Otherwise, access the application here:
 
 [localhost:8080](http://localhost:8080/)
 
+<br><br> [back to top](#readme-top)
+<a id="understanding-application-logic"></a>
 ## Understanding application logic
 
 Let's begin with servers and their interactions within... 
 
 The Archiver has an Nginx server. This is used to display responses from the underlying NodeJS 
-server where Node processes form requests and decides how to treat them. Essentially, if happy with the request, Node 
-will instruct HTTrack to perform a website copy operation, and it does this with predefined options, and a custom plugin.
+server where Node processes form requests and decides how to treat them.
 
+Essentially, if happy with the request, Node will instruct HTTrack to perform a website copy operation, and it does this 
+with predefined options. 
+
+Supercronic is used within the app for scheduling. We have two schedules defined:
+
+1. S3 data-sync
+2. Daily snapshot
+
+### S3 data-sync
+Using the AWS Cli, our data-sync executes `aws s3 sync /snapshot/ s3://our-bucket` every 6 minutes whilst a spider 
+operation is alive. When the operation completes, the schedule is cancelled. A last and final data-sync takes place to
+ensure all snapshot data has been transferred.
+
+### Daily snapshot
+At 3 am each morning, a snapshot process is launched by sending an authorised POST request to the node service. Once
+accepted, S3 data-sync is scheduled; S3 data-sync only runs during a snapshot process.  
+
+
+<br><br> [back to top](#readme-top)
+<a id="httrack"></a>
 ## HTTrack
 
 At the very heart of the Archiver sits [HTTrack](https://en.wikipedia.org/wiki/HTTrack). This application is configured 
 by Node to take a snapshot of the MoJ Intranet. Potentially, you can point the Archiver at any website address and, 
 using the settings for the Intranet, it will attempt to create an isolated copy of it.
 
+<a id="debugging"></a>
 ### Debugging
 
 The output of HTTrack can be noted in Docker Composes' `stdout` in the running terminal window however, a more 
 detailed and linear output stream is available in the `hts-log.txt` file. You can find this in the root of the snapshot. 
 
-### Testing and making modifications to the application
+<a id="testing-and-making-modifications"></a>
+### Testing and making modifications
 
 All application processing for HTTrack is managed in the `process.js` file located in the NodeJS application. You will find all the 
 options used to set HTTrack up.
 
 To understand the build process further, please look at the Makefile.
 
+<br><br> [back to top](#readme-top)
+<a id="kubernetes"></a>
 ## Kubernetes
  
 [Interact with running pods with help from this cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#interacting-with-running-pods).
@@ -110,9 +165,9 @@ Please be aware that with every call to the CP k8s cluster, you will need to pro
 kubectl -n justice-website-archive-dev
 ```
 
-## Commands
+<a id="commands-kubernetes"></a>
+### Commands
 
-**Kubernetes**
 ```bash
 # list available pods for the namespace
 kubectl -n justice-website-archive-dev get pods
@@ -122,7 +177,12 @@ kubectl -n justice-website-archive-dev get pods
 kubectl -n justice-website-archive-dev cp justice-website-archive-dev-<pod-id>:/archiver/snapshots/www.justice.gov.uk/<date>/hts-log.txt ~/hts-log.txt
 ```
 
-**Make**
+<br><br> [back to top](#readme-top)
+<a id="makefile"></a>
+## Makefile
+
+<a id="commands-makefile"></a>
+### Commands
 
 | Command             | Description                                                                                                                                           |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -27,8 +27,7 @@ app.post('/processing', async function (request, response, next) {
     if (!httrack_pid) {
         response.status(200).sendFile(path.join('/usr/share/nginx/html/working.html'));
         await spider(request.body);
-    }
-    else {
+    } else {
         let etime = execSync('ps -p ' + httrack_pid.toString().trim() + ' -o etime=').toString().trim().split(":"),
             segments = ['second', 'minute', 'hour', 'day'],
             elapsed_time = '',
@@ -44,7 +43,7 @@ app.post('/processing', async function (request, response, next) {
             }
         }
 
-        execSync( "sed -i -e 's/\\(<elapsed_time>\\).*\\(<\\/elapsed_time>\\)/<elapsed_time>" + elapsed_time + "<\\/elapsed_time>/g' /usr/share/nginx/html/rejected.html");
+        execSync("sed -i -e 's/\\(<elapsed_time>\\).*\\(<\\/elapsed_time>\\)/<elapsed_time>" + elapsed_time + "<\\/elapsed_time>/g' /usr/share/nginx/html/rejected.html");
         response.status(200).sendFile(path.join('/usr/share/nginx/html/rejected.html'));
     }
 });

@@ -168,14 +168,33 @@ kubectl -n justice-website-archive-dev
 ```
 
 <a id="commands-kubernetes"></a>
-### Commands
+### Useful commands
 
 ```bash
 # list available pods for the namespace
-kubectl -n justice-website-archive-dev get pods
+kubectl get pods --namespace justice-gov-uk-archiver-dev
 
-# copy a log file from a pod to your local machine 
-# update pod-id, agency and date
+# open an interactive shell on an active pod
+kubectl exec --stdin --tty justice-gov-uk-archiver-dev-<pod-id> --namespace justice-gov-uk-archiver-dev -- /bin/bash
+````
+
+Once you have an interactive shell, you can communicate with S3:
+
+```bash
+# list bucket directories
+aws s3 ls s3://${S3_BUCKET_NAME}/
+
+# get a list of snapshots
+aws s3 ls s3://${S3_BUCKET_NAME}/www.justice.gov.uk/
+
+# get a list of snapshot files - replace <date> 
+aws s3 ls s3://${S3_BUCKET_NAME}/www.justice.gov.uk/<date>-03-00/ --recursive --human-readable
+```
+
+Copy a log file from a pod to your local machine
+
+```bash
+# update pod-id and date
 kubectl -n justice-website-archive-dev cp justice-website-archive-dev-<pod-id>:/archiver/snapshots/www.justice.gov.uk/<date>/hts-log.txt ~/hts-log.txt
 ```
 
@@ -183,13 +202,15 @@ kubectl -n justice-website-archive-dev cp justice-website-archive-dev-<pod-id>:/
 <a id="makefile"></a>
 ## Makefile
 
+We use Makefile to reduce some complex or repetitive commands to simple `make` commands. 
+
 <a id="commands-makefile"></a>
 ### Commands
 
 | Command             | Description                                                                                                                                           |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `make image`        | Used by GitHub action, cd.yml, during build step                                                                                                      |
-| `make launch`       | Checks if the intranet docker instance is running; if not, launch dory and docker in the background and open the site in the systems default browser  |
+| `make launch`       | Checks if the docker instance is running; if not, launch dory and docker in the background and open the site in the systems default browser  |
 | `make run`          | Launch the application locally with `docker compose up`, requiring `env` + `dory`                                                                     |
 | `make down`         | Alias of `docker compose down`.                                                                                                                       |
 | `make shell`        | Open a bash shell on the spider container. The application must already be running (e.g. via `make run`) before this can be used.                     |

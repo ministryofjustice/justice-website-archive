@@ -125,7 +125,7 @@ async function spider(body) {
     listener.stderr.on('data', data => console.log(`httrack stderr: ${data}`));
     listener.on('error', (error) => console.log(`httrack error: ${error.message}`));
     listener.on('close', (code) => {
-        console.log("The MoJ Spider has completed the mirror process with exit code ${code}.\n");
+        console.log(`The MoJ Spider has completed the mirror process with exit code ${code}.`);
 
         // stop the sync process
         execSync('kill -9 `cat /archiver/supercronic_sync.pid`');
@@ -147,13 +147,14 @@ function sync_all_data() {
         console.log("Synchronisation complete.\n");
     });
 
-    // check if process still running after 90 seconds
+    // check if process still running after 5 minutes
+    // kill if needed
     setTimeout(async () => {
         let s3sync_pid = await process_is_running('s3sync');
         if (s3sync_pid) {
             exec('kill -9 ' + s3sync_pid.toString().trim());
         }
-    }, 90000)
+    }, 300000);
 }
 
 /**

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Justice Archive - NodeJS Processing
+ * Justice Archive - Node.js Processing
  * -
  *********************************************/
 const express = require('express');

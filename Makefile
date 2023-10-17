@@ -26,7 +26,7 @@ sync:
 build:
 	bin/build.sh
 
-launch: build
+launch: build dory
 	@bin/launch.sh
 	@echo "\n Justice spider available here: http://spider.justice.docker/\n"
 	@docker compose logs -f spider

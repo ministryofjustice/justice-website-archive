@@ -12,6 +12,8 @@ indent() {
 # Search for the Dory Proxy container
 DORY_RUNNING=$(docker ps | grep dory_dnsmasq)
 
+echo -e "${DOTS} ${DOTS} Checking Dory... ${DOTS}\n"
+
 # If an output is available in the DORY_RUNNING var, we're good. Otherwise, try and start the proxy server
 if [[ -z "$DORY_RUNNING" ]]; then
   if command -v dory &>/dev/null; then

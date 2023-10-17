@@ -168,8 +168,17 @@ kubectl -n justice-website-archive-dev
 # list available pods for the namespace
 kubectl get pods --namespace justice-gov-uk-archiver-dev
 
+# make interaction a little easier; we can create repeatable variables
+# our namespace is the same name as the app, defined in ./kubectl_deploy/development/deployment.tpl
+# K8S_NSP="justice-gov-uk-archiver-dev";
+
+# define a pod name, gets the first available pod
+# K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}")
+
 # open an interactive shell on an active pod
-kubectl exec --stdin --tty justice-gov-uk-archiver-dev-<pod-id> --namespace justice-gov-uk-archiver-dev -- /bin/bash
+K8S_NSP="justice-gov-uk-archiver-dev"; \
+K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}"); \
+kubectl exec --stdin --tty ${K8S_POD} -n ${K8S_NS} -- /bin/bash
 ````
 
 Once you have an interactive shell, you can communicate with S3:

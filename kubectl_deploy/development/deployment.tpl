@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: justice-gov-uk-archiver-dev
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate

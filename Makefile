@@ -34,6 +34,9 @@ launch: build dory
 image: Dockerfile Makefile build
 	docker build -t $(IMAGE) .
 
+index:
+	docker compose exec spider /bin/bash generate-index
+
 # Get inside the spider container
 shell:
 	docker compose exec spider /bin/bash

@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  REGISTRY: ''
+
 jobs:
   build_ecr:
     runs-on: ubuntu-latest
@@ -47,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Update image tag
         env:
-          ECR_URL: ${{ secrets.ECR_URL }}
+          ECR_URL: ${{ build_ecr.steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}
         run: export IMAGE_TAG=${{ github.sha }} && cat kubectl_deploy/development/deployment.tpl | envsubst > kubectl_deploy/development/deployment.yaml
 
       - name: "Authenticate to the cluster"

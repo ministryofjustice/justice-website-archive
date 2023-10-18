@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: justice-gov-uk-archiver-service
+  name: justice-archiver-dev-service
   labels:
-    app: justice-gov-uk-archiver-dev
+    app: justice-archiver-dev
 spec:
   ports:
   - port: 80
     name: http
     targetPort: 8080
   selector:
-    app: justice-gov-uk-archiver-dev
+    app: justice-archiver-dev

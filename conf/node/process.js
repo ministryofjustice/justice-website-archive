@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Justice Archive - NodeJS Processing
+ * Justice Archive - Node.js Processing
  * -
  *********************************************/
 const express = require('express');
@@ -110,14 +110,11 @@ async function spider(body) {
     console.log('Launching the MoJ Spider with the following options: ', options);
     console.log("\nStand by... \n");
 
-    console.log("Starting data-sync process...");
-
+    console.log("Starting data-sync process.");
     // empty s3sync.log
     execSync('echo "" > /archiver/s3sync.log');
     // start the sync process
     exec('s3sync-cron');
-
-    console.log("Done.");
 
     // launch HTTrack with options
     const listener = spawn('httrack', options);
@@ -133,6 +130,7 @@ async function spider(body) {
 
         // sync, one last time
         sync_all_data();
+        create_index();
     });
 }
 
@@ -156,6 +154,17 @@ function sync_all_data() {
         }
     }, 300000);
 }
+
+function create_index() {
+    const listener = spawn('generate-index');
+    listener.stdout.on('data', data => null);
+    listener.stderr.on('data', data => null);
+    listener.on('error', (error) => console.log(`generate-index error: ${error.message}`));
+    listener.on('close', (code) => {
+        console.log("A new index file has been generated.\n");
+    });
+}
+
 
 /**
  * Resolve the PID of a running httrack process.

@@ -51,12 +51,14 @@ COPY --chown=${user}:${user} conf/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --chown=${user}:${user} conf/entrypoint/ /docker-entrypoint.d
 COPY --chown=${user}:${user} conf/s3-sync.sh /usr/bin/s3sync
 COPY --chown=${user}:${user} conf/start-cron-sync.sh /usr/bin/s3sync-cron
+COPY --chown=${user}:${user} conf/generate-index.sh /usr/bin/generate-index
 
 ## -> make init scripts executable
 RUN chown -R ${user}:${user} /usr/share/nginx/html && \
     chmod -R +x /docker-entrypoint.d/ && \
     chmod +x /usr/bin/s3sync && \
     chmod +x /usr/bin/s3sync-cron && \
+    chmod +x /usr/bin/generate-index && \
     chown ${user}:${user} /etc/cron.d/process-mirror /etc/cron.d/process-sync && \
     # logging
     touch /${user}/s3sync.log && \

@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: justice-gov-uk-archiver-dev
+  name: justice-archiver-dev
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate
@@ -12,14 +12,14 @@ spec:
       maxSurge: 100%
   selector:
     matchLabels:
-      app: justice-gov-uk-archiver-dev
+      app: justice-archiver-dev
   template:
     metadata:
       labels:
-        app: justice-gov-uk-archiver-dev
+        app: justice-archiver-dev
     spec:
       containers:
-      - name: justice-gov-uk-archiver
+      - name: justice-archiver-dev
         image: ${ECR_URL}:${IMAGE_TAG}
         ports:
         - containerPort: 8080
@@ -29,16 +29,6 @@ spec:
               secretKeyRef:
                 name: s3-bucket-output
                 key: bucket_name
-          - name: S3_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: s3-bucket-output
-                key: access_key_id
-          - name: S3_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: s3-bucket-output
-                key: secret_access_key
         readinessProbe:
           httpGet:
             path: /health

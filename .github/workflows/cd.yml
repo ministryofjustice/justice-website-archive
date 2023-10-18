@@ -10,9 +10,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  REGISTRY: ''
-
 jobs:
   build_ecr:
     runs-on: ubuntu-latest

@@ -16,7 +16,7 @@ app.use(cors({
     methods: ['POST'],
     origin: [
         'http://spider.justice.docker/',
-        'https://dev-justice-archive.apps.live.cloud-platform.service.justice.gov.uk/'
+        'https://justice-archiver.apps.live.cloud-platform.service.justice.gov.uk/'
     ]
 }));
 

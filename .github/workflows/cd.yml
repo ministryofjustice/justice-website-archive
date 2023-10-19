@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Update image tag
         env:
-          ECR_URL: ${{ steps.ecr-login.outputs.registry }}/${{ vars.ECR_REPOSITORY }}
+          ECR_URL: ${{ vars.ECR_URL }}/${{ vars.ECR_REPOSITORY }}
         run: export IMAGE_TAG=${{ github.sha }} && cat kubectl_deploy/development/deployment.tpl | envsubst > kubectl_deploy/development/deployment.yaml
 
       - name: "Authenticate to the cluster"

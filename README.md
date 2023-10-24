@@ -102,7 +102,7 @@ Otherwise, access the application here:
 [http://localhost:8080/](http://localhost:8080/)
 
 <br><br> [back to top](#readme-top)
-<a id="understanding-application-logic"></a>
+
 ## Understanding application logic
 
 Let's begin with servers and their interactions within... 
@@ -129,20 +129,17 @@ accepted, S3 data-sync is scheduled; S3 data-sync only runs during a snapshot pr
 
 
 <br><br> [back to top](#readme-top)
-<a id="httrack"></a>
 ## HTTrack
 
 At the very heart of the Archiver sits [HTTrack](https://en.wikipedia.org/wiki/HTTrack). This application is configured 
 by Node to take a snapshot of the MoJ Intranet. Potentially, you can point the Archiver at any website address and, 
 using the settings for the Intranet, it will attempt to create an isolated copy of it.
 
-<a id="debugging"></a>
 ### Debugging
 
 The output of HTTrack can be noted in Docker Composes' `stdout` in the running terminal window however, a more 
 detailed and linear output stream is available in the `hts-log.txt` file. You can find this in the root of the snapshot. 
 
-<a id="testing-and-making-modifications"></a>
 ### Testing and making modifications
 
 All application processing for HTTrack is managed in the `process.js` file located in the NodeJS application. You will find all the 
@@ -151,7 +148,7 @@ options used to set HTTrack up.
 To understand the build process further, please look at the Makefile.
 
 <br><br> [back to top](#readme-top)
-<a id="kubernetes"></a>
+
 ## Kubernetes
  
 [Interact with running pods with help from this cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#interacting-with-running-pods).
@@ -161,7 +158,6 @@ Please be aware that with every call to the CP k8s cluster, you will need to pro
 kubectl -n justice-website-archive-dev
 ```
 
-<a id="commands-kubernetes"></a>
 ### Useful commands
 
 ```bash
@@ -175,10 +171,11 @@ kubectl get pods --namespace justice-gov-uk-archiver-dev
 # define a pod name, gets the first available pod
 # K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}")
 
-# open an interactive shell on an active pod
-K8S_NSP="justice-gov-uk-archiver-dev"; \
+K8S_NSP="justice-archiver-dev"; \
 K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}"); \
-kubectl exec --stdin --tty ${K8S_POD} -n ${K8S_NS} -- /bin/bash
+
+# open an interactive shell on an active pod
+kubectl exec -it ${K8S_POD} -n ${K8S_NSP} -- bash
 ````
 
 Once you have an interactive shell, you can communicate with S3:
@@ -195,25 +192,29 @@ aws s3 ls s3://${S3_BUCKET_NAME}/www.justice.gov.uk/<date>-03-00/ --recursive --
 ```
 
 Copy a log file from a pod to your local machine
-
+ 
 ```bash
-# update pod-id and date
-kubectl -n justice-website-archive-dev cp justice-website-archive-dev-<pod-id>:/archiver/snapshots/www.justice.gov.uk/<date>/hts-log.txt ~/hts-log.txt
+# change the date to 
+# one that exists
+SCRAPE_DATE="2023-10-24-18-03";
+
+# requires K8S_NSP & K8S_POD 
+# variables being defined  
+kubectl -n ${K8S_NSP} cp ${K8S_POD}:/archiver/snapshots/www.justice.gov.uk/"${SCRAPE_DATE}"/hts-log.txt ~/hts-log.txt
 ```
 
 <br><br> [back to top](#readme-top)
-<a id="makefile"></a>
 ## Makefile
 
 We use Makefile to reduce some complex or repetitive commands to simple `make` commands. 
 
-<a id="commands-makefile"></a>
+
 ### Commands
 
 | Command             | Description                                                                                                                                           |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `make image`        | Used by GitHub action, cd.yml, during build step                                                                                                      |
-| `make launch`       | Checks if the docker instance is running; if not, launch dory and docker in the background and open the site in the systems default browser  |
+| `make launch`       | Checks if the docker instance is running; if not, launch dory and docker in the background and open the site in the systems default browser           |
 | `make run`          | Launch the application locally with `docker compose up`, requiring `env` + `dory`                                                                     |
 | `make down`         | Alias of `docker compose down`.                                                                                                                       |
 | `make shell`        | Open a bash shell on the spider container. The application must already be running (e.g. via `make run`) before this can be used.                     |

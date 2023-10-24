@@ -1,11 +1,7 @@
 #!/bin/bash
 
-ROOT="/archiver/snapshots"
-OUTPUT="$ROOT/index.html"
-
-finder () {
-  find "$1" -maxdepth 1 -mindepth 1 -type d | sort -nr
-}
+ROOT=$(aws s3 ls s3://"${S3_BUCKET_NAME}"/)
+OUTPUT="/archiver/snapshots/index.html"
 
 {
   echo "<!doctype html><html lang=\"en\"><head><title>Justice Archive Index</title>"
@@ -13,20 +9,40 @@ finder () {
   echo '</head><body><main>'
 } > "$OUTPUT"
 
-
-i=0
 echo "<div class=\"container px-4 py-5\"><h1>Ministry of Justice Archiver</h1>" >> "$OUTPUT"
-for scraped in $(finder "$ROOT"); do
-  web_url=$(basename "$scraped")
-  echo "<h2 class=\"pb-2 border-bottom\">$web_url</h2>" >> "$OUTPUT"
-  echo "<ul class=\"list-group\">" >> "$OUTPUT"
-  for i in $(finder "$scraped"); do
-    date_stamp=$(basename "$i")
-    readable_date=$(date -d "${date_stamp::-6}" +"%A, %d %B %Y")
-    echo "<li class=\"list-group-item\"><a href=\"$web_url/$date_stamp/\">$readable_date</a></li>" >> "$OUTPUT"
-  done
-  echo "</ul>" >> "$OUTPUT"
-done
+  while IFS= read -r line; do
+
+    web_url="${line##* }"
+    if [[ $web_url = \.* ]] ; then
+        continue
+    fi
+    if [[ "$web_url" == index.html ]]; then
+        continue
+    fi
+
+    {
+      echo "<h2 class=\"pb-2 border-bottom\">$web_url</h2>"
+      echo "<ul class=\"list-group\">"
+    } >> "$OUTPUT"
+
+    while IFS= read -r date_line; do
+
+      if [[ $date_line = \.* ]] ; then
+          continue
+      fi
+
+      if [[ "$web_url" == index.html ]]; then
+          continue
+      fi
+
+      date_stamp="${date_line##* }"
+      readable_date=$(date -d "${date_stamp::-6}" +"%A, %d %B %Y")
+      echo "<li class=\"list-group-item\"><a href=\"${web_url}${date_stamp}index.html\">$readable_date</a></li>" >> "$OUTPUT"
+    done <<< "$(aws s3 ls s3://"${S3_BUCKET_NAME}"/"${web_url}")"
+
+    echo "</ul>" >> "$OUTPUT"
+  done <<< "$ROOT"
+
 echo "</div>" >> "$OUTPUT"
 
 {

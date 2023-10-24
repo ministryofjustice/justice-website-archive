@@ -39,7 +39,6 @@
 
 ---
 
-<a id="workflow"></a>
 ## Workflow
 
 Archive utility to capture working snapshots of justice.gov.uk. We use the following technologies to achieve this:
@@ -58,7 +57,7 @@ Access point:
 ## [Archive: justice.gov.uk](https://dnaspuf4vt4nd.cloudfront.net/www.justice.gov.uk/index.html)
 
 <br><br> [back to top](#readme-top)
-<a id="creating-a-snaphot"></a>
+
 ## Creating a snapshot
 
 Access is granted if you are in possession of our basic-auth credentials; these are different from the credentials 
@@ -66,7 +65,7 @@ mentioned above.
 
 Access point for `archive-user`: [Cloud Platform](https://justice-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
 
-<a id="local-development"></a>
+
 ## Local development
 
 > It's important to note that creating a snapshot from a local machine proved to present resource
@@ -76,7 +75,7 @@ Requires
 
 - Docker
 
-<a id="installation"></a>
+
 ### Installation
 
 Clone to your machine:

@@ -154,7 +154,7 @@ To understand the build process further, please look at the Makefile.
 Please be aware that with every call to the CP k8s cluster, you will need to provide the namespace, as shown below:
 
 ```bash
-kubectl -n justice-website-archive-dev
+kubectl -n justice-archiver-dev
 ```
 
 ### Useful commands

@@ -18,6 +18,7 @@ spec:
       labels:
         app: justice-archiver-dev
     spec:
+      serviceAccountName: justice-archiver-dev
       containers:
       - name: justice-archiver-dev
         image: ${ECR_URL}:${IMAGE_TAG}

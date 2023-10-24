@@ -176,6 +176,9 @@ K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0
 
 # open an interactive shell on an active pod
 kubectl exec -it ${K8S_POD} -n ${K8S_NSP} -- bash
+
+# monitor the system log of the first pod
+kubectl logs -f ${K8S_POD} -n ${K8S_NSP}
 ````
 
 Once you have an interactive shell, you can communicate with S3:

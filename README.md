@@ -64,7 +64,7 @@ Access point:
 Access is granted if you are in possession of our basic-auth credentials; these are different from the credentials 
 mentioned above.
 
-Access point: [Cloud Platform](https://dev-justice-gov-uk-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
+Access point for `archive-user`: [Cloud Platform](https://justice-archiver.apps.live.cloud-platform.service.justice.gov.uk/)
 
 <a id="local-development"></a>
 ## Local development

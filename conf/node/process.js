@@ -128,9 +128,10 @@ async function spider(body) {
         execSync('kill -9 `cat /archiver/supercronic_sync.pid`');
         execSync('rm /archiver/supercronic_sync.pid');
 
+        // generate an index page for the scrape
+        create_index();
         // sync, one last time
         sync_all_data();
-        create_index();
     });
 }
 

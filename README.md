@@ -54,7 +54,7 @@ Archive utility to capture working snapshots of justice.gov.uk. We use the follo
 
 Access point:
 
-## [Archive: justice.gov.uk](https://dnaspuf4vt4nd.cloudfront.net/www.justice.gov.uk/index.html)
+### [Archive: justice.gov.uk](https://d2188sguqzuw6r.cloudfront.net/index.html)
 
 <br><br> [back to top](#readme-top)
 

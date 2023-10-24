@@ -33,7 +33,7 @@
 6. [Kubernetes](#kubernetes)
    1. [Commands](#useful-commands)
 7. [Makefile](#makefile)
-   1. [Make Commands](#make-commands)
+   1. [Commands](#make-commands)
 
 </details>
 

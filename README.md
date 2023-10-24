@@ -31,9 +31,9 @@
    1. [Debugging](#debugging)
    2. [Testing and making modifications](#testing-and-making-modifications)
 6. [Kubernetes](#kubernetes)
-   1. [Commands](#commands-kubernetes)
-7. [Makefile](#connect-and-configure-1)
-   1. [Commands](#commands-makefile)
+   1. [Commands](#useful-commands)
+7. [Makefile](#makefile)
+   1. [Make Commands](#make-commands)
 
 </details>
 
@@ -212,7 +212,7 @@ kubectl -n ${K8S_NSP} cp ${K8S_POD}:/archiver/snapshots/www.justice.gov.uk/"${SC
 We use Makefile to reduce some complex or repetitive commands to simple `make` commands. 
 
 
-### Commands
+### Make commands
 
 | Command             | Description                                                                                                                                           |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -30,6 +30,11 @@ spec:
               secretKeyRef:
                 name: s3-bucket-output
                 key: bucket_name
+          - name: CLOUDFRONT_URL
+            valueFrom:
+              secretKeyRef:
+                name: cloudfront-output
+                key: cloudfront_url
         readinessProbe:
           httpGet:
             path: /health

@@ -130,8 +130,6 @@ async function spider(body) {
 
         // generate an index page for the scrape
         create_index();
-        // sync, one last time
-        sync_all_data();
     });
 }
 
@@ -163,6 +161,8 @@ function create_index() {
     listener.on('error', (error) => console.log(`generate-index error: ${error.message}`));
     listener.on('close', (code) => {
         console.log("A new index file has been generated.\n");
+        // sync, one last time
+        sync_all_data();
     });
 }
 

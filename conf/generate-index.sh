@@ -7,7 +7,6 @@
 ## --- --         Ministry of Justice UK        -- --- ##
 ## --- -       Central Digital Product Team      - --- ##
 ## --- --                                       -- --- ##
-## --- --- --- --- --- --- --- --- --- --- --- --- --- ##
 #########################################################
 
 ## Path of output index.html file

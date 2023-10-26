@@ -160,14 +160,18 @@ kubectl -n justice-archiver-dev
 ### Useful commands
 
 ```bash
-# make interaction a little easier; we can create repeatable variables
-# our namespace is the same name as the app, defined in ./kubectl_deploy/development/deployment.tpl
-# K8S_NSP="justice-gov-uk-archiver-dev";
+# make interaction a little easier; we can create repeatable 
+# variables, our namespace is the same name as the app, defined 
+# in ./kubectl_deploy/development/deployment.tpl
 
 # set some vars, gets the first available pod (only one in our case)
 K8S_NSP="justice-archiver-dev"; \
 K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}"); \
+```
 
+After setting the above variables (`copy -> paste -> execute`) the following blocks of commands will work using `copy -> paste -> execute` too.
+
+```bash
 # list available pods and their status for the namespace
 kubectl get pods -n ${K8S_NSP}
 
@@ -197,12 +201,10 @@ aws s3 ls s3://${S3_BUCKET_NAME}/www.justice.gov.uk/<date>-03-00/ --recursive --
 Copy a log file from a pod to your local machine
  
 ```bash
-# change the date to 
-# one that exists
+# change the date to one that exists
 SCRAPE_DATE="2023-10-24-18-03";
 
-# requires K8S_NSP & K8S_POD 
-# variables being defined  
+# uses K8S_NSP & K8S_POD variables  
 kubectl -n ${K8S_NSP} cp ${K8S_POD}:/archiver/snapshots/www.justice.gov.uk/"${SCRAPE_DATE}"/hts-log.txt ~/hts-log.txt
 ```
 

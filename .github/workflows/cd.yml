@@ -52,15 +52,14 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
 
-      - name: "Update basic authentication"
-        env:
-          BASIC_AUTH: ${{ secrets.BASIC_AUTH }}
-        run: cat kubectl_deploy/development/secret.tpl | envsubst > kubectl_deploy/development/secret.yaml
-
-      - name: "Update image tag"
+      - name: "Inject environment variables"
         env:
           ECR_URL: ${{ vars.ECR_URL }}/${{ vars.ECR_REPOSITORY }}
-        run: export IMAGE_TAG=${{ github.sha }} && cat kubectl_deploy/development/deployment.tpl | envsubst > kubectl_deploy/development/deployment.yaml
+          IMAGE_TAG: ${{ github.sha }}
+          BASIC_AUTH: ${{ secrets.BASIC_AUTH }}
+        run: |
+          cat kubectl_deploy/development/secret.tpl | envsubst > kubectl_deploy/development/secret.yaml
+          cat kubectl_deploy/development/deployment.tpl | envsubst > kubectl_deploy/development/deployment.yaml
 
       - name: "Authenticate to the cluster"
         env:

@@ -3,6 +3,9 @@
 ## -- --- --- --- --- --- --- --- -- ##
 ## --  INDEX.HTML FILE GENERATOR  -- ##
 ## -- --- --- --- --- --- --- --- -- ##
+## --    Ministry of Justice UK   -- ##
+## -  Central Digital Product Team - ##
+## -- --- --- --- --- --- --- --- -- ##
 #######################################
 
 ## Path of output index.html file
@@ -30,7 +33,8 @@ echo "<div class=\"container px-4 py-5\"><h1>Ministry of Justice Archiver</h1>" 
 rm "$DOMAINS" 2> /dev/null
 touch "$DOMAINS"
 while IFS= read -r domain; do
-  ## Only select partial object keys not actual objects, also described loosely as "directories"
+  ## Only select partial object keys not actual objects.
+  ## These are prepended with PRE and described loosely as "directories"
   if [[ $domain == *" PRE"* ]]; then
     printf "%s\n" "${domain##* }" >> "$DOMAINS"
   fi
@@ -40,7 +44,7 @@ while IFS= read -r archive_host; do
   ## Heading for the archive domain + start of archive list
   {
     echo "<h2 class=\"pb-2 border-bottom\">${archive_host::-1}</h2>"
-    echo "<ul class=\"list-group\">"
+    echo '<ul class="list-group">'
   } >> "$OUTPUT"
 
   ## Hard remove and create to ensure clean list of archive dates
@@ -56,17 +60,20 @@ while IFS= read -r archive_host; do
     fi
   done <<< "$(aws s3 ls s3://"${S3_BUCKET_NAME}"/"${archive_host}")"
 
-  ## Manipulate the results, reverse the lines.
+  ## Manipulate the result, reverse the lines.
   ## This action will order dates in descending order - newest at the top.
   nl "$DOMAIN_ARCHIVES_TEMP" | sort -nr | cut -f 2- > $DOMAIN_ARCHIVES
-  ## Remove the temp file for each archive domain
+  ## Remove the temp file
   rm "$DOMAIN_ARCHIVES_TEMP"
 
   ## Loops over each archive entry, creating an anchor link to each one.
-  while IFS= read -r date_line; do
-    date_stamp="${date_line##* }"
-    readable_date=$(date -d "${date_stamp::-6}" +"%A, %d %B %Y")
-    echo "<li class=\"list-group-item\"><a href=\"${archive_host}${date_stamp}${archive_host}index.html\">$readable_date</a></li>" >> "$OUTPUT"
+  while IFS= read -r archive_link; do
+    readable_date=$(date -d "${archive_link::-6}" +"%A, %d %B %Y")
+    {
+      echo '<li class="list-group-item">'
+      echo "<a href=\"${archive_host}${archive_link}${archive_host}index.html\" target=\"_blank\">$readable_date</a>"
+      echo '</li>'
+    } >> "$OUTPUT"
   done < "$DOMAIN_ARCHIVES"
 
   echo "</ul>" >> "$OUTPUT"
@@ -84,5 +91,6 @@ echo "</div>" >> "$OUTPUT"
 rm "$DOMAINS"
 rm "$DOMAIN_ARCHIVES"
 
+## a little pause before any other action takes place
 sleep 1
 exit 0

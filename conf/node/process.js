@@ -89,7 +89,7 @@ async function spider(body) {
      * @type {string[]}
      */
     rules = [
-        '+*.png', '+*.gif', '+*.jpg', '+*.jpeg', '+*.css', '+*.js',
+        '+*.png', '+*.gif', '+*.jpg', '+*.jpeg', '+*.css', '+*.js', '-*/scripts.js',
         '-*ad.doubleclick.net/*', '-*coveritlive.com/*', '-*www.justice.gov.uk/news-old/features?*', '-*/_admin*'
     ];
 

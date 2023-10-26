@@ -75,7 +75,7 @@ async function spider(body) {
         mirror.url.origin,
         '-%R', // set the referrer: https://www.mankier.com/1/httrack#-%25R
         mirror.url.origin,
-        '-F',
+        '-F', // set user agent to different string: https://www.mankier.com/1/httrack#-F
         '"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"'
     ];
 

@@ -49,14 +49,9 @@ Archive utility to capture working snapshots of justice.gov.uk. We use the follo
 4. HTTrack Cli
 5. NodeJS Server
 
-<a id="viewing-the-latest-snapshot"></a>
 ## Viewing the latest snapshot
 
-Access point:
-
-### [Archive: justice.gov.uk](https://d2188sguqzuw6r.cloudfront.net/index.html)
-
-<br><br> [back to top](#readme-top)
+_**Please ask the Central Digital Product Team for the INDEX URL to view the archives.**_
 
 ## Creating a snapshot
 

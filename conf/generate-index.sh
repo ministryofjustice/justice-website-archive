@@ -68,11 +68,11 @@ while IFS= read -r archive_host; do
   rm "$DOMAIN_ARCHIVES_TEMP"
 
   ## Loops over each archive entry, creating an anchor link to each one.
-  while IFS= read -r archive_link; do
-    readable_date=$(date -d "${archive_link::-6}" +"%A, %d %B %Y")
+  while IFS= read -r archive_date; do
+    readable_date=$(date -d "${archive_date::-6}" +"%A, %d %B %Y")
     {
       echo '<li class="list-group-item">'
-      echo "<a href=\"${archive_host}${archive_link}${archive_host}index.html\" target=\"_blank\">$readable_date</a>"
+      echo "<a href=\"${archive_host}${archive_date}index-2.html\" target=\"_blank\">$readable_date</a>"
       echo '</li>'
     } >> "$OUTPUT"
   done < "$DOMAIN_ARCHIVES"

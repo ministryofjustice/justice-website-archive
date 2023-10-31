@@ -161,7 +161,7 @@ kubectl -n justice-archiver-dev
 
 # set some vars, gets the first available pod (only one in our case)
 K8S_NSP="justice-archiver-dev"; \
-K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}"); \
+K8S_POD=$(kubectl -n ${K8S_NSP} get pod -l app=${K8S_NSP} -o jsonpath="{.items[0].metadata.name}");
 ```
 
 After setting the above variables (`copy -> paste -> execute`) the following blocks of commands will work using `copy -> paste -> execute` too.

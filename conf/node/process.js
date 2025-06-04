@@ -102,8 +102,8 @@ async function spider(body) {
     settings = [
         '-s0', // never follow robots.txt and meta robots tags: https://www.mankier.com/1/httrack#-sN
         '-%k', // keep-alive if possible https://www.mankier.com/1/httrack#-%25k
-        //'-I0', // don't make an index page https://www.mankier.com/1/httrack#-I
-        //'-N100', // create without host directory https://www.mankier.com/1/httrack#-N100
+        '-I0', // don't make an index page https://www.mankier.com/1/httrack#-I
+        '-N100', // create without host directory https://www.mankier.com/1/httrack#-N100
         '-V', // execute system command after each file: https://www.mankier.com/1/httrack#-V
         '"sed -i \'s/ id="popular-wrapper"//g\' \$0"',
         '-O', // path for snapshot/logfiles+cache: https://www.mankier.com/1/httrack#-O
